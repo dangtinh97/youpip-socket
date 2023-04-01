@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  pip_node:
+    container_name: "pip_node"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+#    working_dir: /var/www/html
+#    volumes:
+#      - .:/var/www/html
+    ports:
+      - "3003:3003"
