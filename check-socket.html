@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p id="id-socket"></p>
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener("DOMContentLoaded",function (){
+        let socket = io("http://localhost:3003",{
+            "auth":{
+                'token':"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8veW91cGlwLmxvY2FsL2FwaS9sb2dpbiIsImlhdCI6MTY4MDMzNzcxMiwiZXhwIjoxNjk1ODg5NzEyLCJuYmYiOjE2ODAzMzc3MTIsImp0aSI6IkhJMUE1bVp6OGlZNVZ5WW8iLCJzdWIiOiI2NDE5ZTYxOWUwYjEwZTA1M2UwOTI0ODQiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.WOOCZR6dmAL1sg7BP-LipGjR0-m8PWS1lUY0R6jXi2E"
+            },
+            "query": {
+                "EIO": "4",
+                "transport": "polling",
+            },
+        })
+        socket.on("disconnect",()=>{
+            console.log("dsdsds")
+        })
+
+        socket.on("connect",()=>{
+            socket.on("disconnect", () => {
+                console.log("disconnect")
+            })
+
+            socket.on("hello",function (){
+                console.log("HELLO")
+            })
+
+            socket.on("ping",function (){
+                console.log("PING")
+            })
+
+            $('#id-socket').html(`id : ${socket.id}`)
+        })
+
+    })
+</script>
+</body>
+</html>
