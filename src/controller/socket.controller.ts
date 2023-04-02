@@ -25,6 +25,7 @@ class SocketController {
         socket.on(ESocket.JOIN_ROOM,(data:any)=>service.joinRoom(data.room_oid ?? ''))
         socket.on(ESocket.MESSAGE,(data)=>service.message(data.room_oid,data.content))
         socket.on(ESocket.LEAVE_ROOM,(data)=>{
+            console.log(data)
             socket.leave(data)
         })
     }
