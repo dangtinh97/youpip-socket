@@ -13,6 +13,7 @@ class App{
         this.server = http.createServer(this.app)
         new SocketController(this.server)
         App.connectMongo()
+
     }
 
     private static connectMongo(){

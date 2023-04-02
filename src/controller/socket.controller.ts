@@ -19,6 +19,7 @@ class SocketController {
 
     private  socketListener(socket:Socket): void
     {
+        console.log(socket)
         let service = new SocketService(socket,this.userOid)
         service.connect()
         socket.on("disconnect",()=>service.disconnect())
@@ -27,7 +28,6 @@ class SocketController {
     private middleware(){
         this.io.use((socket:Socket,next:any)=>{
             try{
-
                 let decode = jwt.verify(socket.handshake.auth.token ?? '',jwtConfig.jwt)
                 this.userOid = decode.sub
                 console.log(decode)
