@@ -78,12 +78,12 @@ class SocketService {
         let user = users['users'].filter((user:any)=>{
             return user._id.toString()!=this.userOid && (user.socket_id ?? '').toString().length > 0
         })
-        if(user.length>0){
-            this.socket.to(user[0].socket_id).emit(ESocket.MESSAGE,{
-                content:content,
-                from_user_oid:this.userOid
-            })
-        }
+        // if(user.length>0){
+        //     this.socket.to(user[0].socket_id).emit(ESocket.MESSAGE,{
+        //         content:content,
+        //         from_user_oid:this.userOid
+        //     })
+        // }
 
 
     }
