@@ -4,7 +4,6 @@ import jwtConfig from '../config/jwt'
 const jwt = require('jsonwebtoken');
 class SocketController {
     public io:Server
-
     public userOid:string = ''
 
     constructor(server:any) {
@@ -19,10 +18,15 @@ class SocketController {
 
     private  socketListener(socket:Socket): void
     {
-        console.log(socket)
+        socket.join("roomA")
         let service = new SocketService(socket,this.userOid)
         service.connect()
         socket.on("disconnect",()=>service.disconnect())
+        socket.on("PUSH_ROOM",function (data:any){
+            socket.to(data.room ?? 'roomA').emit("PUSH_ROOM",{
+                "name":"dangtinh"
+            })
+        })
     }
 
     private middleware(){
@@ -36,9 +40,10 @@ class SocketController {
                 console.log("JWT error!",e)
                 next(new Error("JWT error!"))
             }
-
         })
     }
+
+
 }
 
 export default SocketController
