@@ -71,7 +71,8 @@ class SocketService {
     public async message(roomOid:string,content:string){
         this.socket.to(roomOid).emit(ESocket.MESSAGE,{
             content:content,
-            from_user_oid:this.userOid
+            from_user_oid:this.userOid,
+            room_oid:roomOid
         })
 
         let users =await this.roomRepository.getUser(roomOid)
