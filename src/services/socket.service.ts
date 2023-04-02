@@ -17,7 +17,7 @@ class SocketService {
         },{
             'socket_id':this.socket.id
         }).then(()=>{
-            this.socket.emit(ESocket.PING,"")
+            this.socket.emit(ESocket.PING,"dangtinh")
         })
     }
 
