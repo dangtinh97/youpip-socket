@@ -58,7 +58,8 @@ class SocketService {
 
     public message(room:string,content:string){
         this.socket.to(room).emit(ESocket.MESSAGE,{
-            content:content
+            content:content,
+            from_user_oid:this.userOid
         })
     }
 }
