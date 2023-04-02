@@ -1,5 +1,7 @@
 enum ESocket {
-    PING="PING"
+    PING="PING",
+    JOIN_ROOM = "JOIN_ROOM",
+    MESSAGE = "MESSAGE"
 }
 
 export default ESocket

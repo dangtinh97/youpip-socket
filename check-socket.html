@@ -2,58 +2,226 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>DEMO WEB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
 </head>
 <body>
-<p id="id-socket"></p>
-<button type="button" id="push">
-    PUSH
-</button>
+<div class="container">
+    <div id="form-login" class="card p-4 d-none">
+        <label>Username:</label>
+        <input type="text" class="form-control" id="username">
+        <div class="mt-3">
+            <button id="btn-login" type="button" class="btn btn-primary">Đăng Nhập</button>
+        </div>
+    </div>
+    <div class="mt-6">
+        <p id="id-socket"></p>
+    </div>
+    <div id="form-connect" class="card p-4 d-none">
+        <label>Kết nối user:</label>
+        <input type="text" class="form-control" id="user-oid">
+        <div class="mt-3">
+            <button id="btn-connect-user" type="button" class="btn btn-primary">Kết nối user</button>
+        </div>
+    </div>
+    <div class="form-group" >
+        <div class="form-group">
+            <label>event:</label>
+            <input type="text" class="form-control" id="event">
+        </div>
+        <div class="form-group">
+            <label>message:</label>
+            <input type="text" class="form-control" id="message">
+        </div>
+        <button type="button" id="push" class="btn btn-info m-4">
+            PUSH
+        </button>
+    </div>
+    <div id="form-history mt-6">
+        <table id="table" class="table table-striped-columns">
+            <thead>
+            <tr>
+                <td>STATUS</td>
+                <td>MESSAGE</td>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js" integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i" crossorigin="anonymous"></script>
 <script>
-    document.addEventListener("DOMContentLoaded",function (){
-        var URL = 'http://54.254.11.130:3003';
-        URL = 'http://localhost:3003';
-        let socket = io(URL,{
-            "auth":{
-                'token':"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vNTQuMjU0LjExLjEzMC9hcGkvbG9naW4iLCJpYXQiOjE2ODA0MDM3NjEsImV4cCI6MTY5NTk1NTc2MSwibmJmIjoxNjgwNDAzNzYxLCJqdGkiOiJBQzJjb1ROZ3dLWWdqbTJTIiwic3ViIjoiNjQxOWU2MTllMGIxMGUwNTNlMDkyNDg0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.3rwxwOQpIMyPxoi9uvuwy6FZDlGaox6zF47ZnYFw1jc"
+    document.addEventListener("DOMContentLoaded", function () {
+        const EVENT_MESSAGE  = "MESSAGE"
+        let users = {
+            'user_1': {
+                'username': '7f55a76a-c99c-11ed-afa1-0242ac120002',
+                'user_oid': '64147773a02ac95aa7093572'
             },
-            "query": {
-                "EIO": "4",
-                "transport": "polling",
-            },
+            'user_2': {
+                'username': '13547c71-1fd3-42de-9dfc-7f7c1dce8bc1',
+                'user_oid': '6419e619e0b10e053e092484'
+            }
+        }
+
+        let BASE_URL = 'http://localhost'
+        let URL_API = 'http://youpip.local/api'
+        let token = ''
+        let urlSocket = BASE_URL + ':3003'
+        let roomConnected = ''
+
+        $(this).on('click', '#btn-login', async function () {
+            $(this).attr('disabled', true)
+            let userName = $("#username").val().trim()
+            token = await login(userName)
+            console.log(token)
+            $(this).remove()
+            connectSocket(token)
         })
-        socket.on("disconnect",()=>{
 
+        $(this).on('click', '#btn-connect-user', async function () {
+            let userOid = $('#user-oid').val().trim()
+            let roomOid = await joinRoom(userOid)
+            show("Get room_oid success!", roomOid)
+            roomConnected = roomOid
+            socket.emit('JOIN_ROOM', {
+                room_oid: roomOid
+            })
         })
 
-        socket.on("connect",()=>{
-            socket.on("disconnect", () => {
-                console.log("disconnect")
-            })
+        $(this).on('click','#push',function (){
+            let event = $('#event').val()
+            let message = $('#message').val()
 
-            socket.on("PUSH_ROOM",function (){
-                console.log("HELLO")
-            })
+            if(event===EVENT_MESSAGE){
+                $('#message').val('')
+                message = {
+                    room_oid:roomConnected,
+                    content:message
+                }
+            }
 
-            socket.on("PING",function (){
-                console.log("PING")
+            socket.emit(event,message)
+        })
+
+        let socket = null
+        let connectSocket = (token) => {
+            socket = io(urlSocket, {
+                auth: {
+                    token: token
+                },
+                query: {
+                    "EIO": "4",
+                    "transport": "polling",
+                },
             })
+            socketListener()
             console.log(socket)
+        }
 
-            $('#id-socket').html(`id : ${socket.id}`)
-
-            socket.on('PUSH_ROOM',function (){
-                console.log("roomA")
+        let socketListener = () => {
+            socket?.on('connect', function () {
+                show('CONNECTED', socket.id)
             })
 
-        })
-        $("#push").on('click',function (){
-            socket.emit("PUSH_ROOM",{
-                room:"roomA"
+            socket?.on("PING", function () {
+
             })
-        })
+
+            socket.on("MESSAGE",function (data){
+                show("MESSAGE",JSON.stringify(data))
+            })
+        }
+
+        let login = async (username) => {
+            return new Promise(resolve => {
+                $.ajax({
+                    url: URL_API + '/login',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        username: username
+                    },
+                    success: (res) => {
+                        return resolve(res.data.token)
+                    }
+                })
+            })
+        }
+
+        let show = (status, content) => {
+            $('#table > tbody').append(`
+            <tr>
+            <td>${status}</td>
+            <td>${content}</td>
+</tr>
+            `)
+        }
+
+        let joinRoom = (userOid) => {
+            return new Promise(resolve => {
+                $.ajax({
+                    url: URL_API + '/chats/join-room',
+                    type: "GET",
+                    headers: headers(),
+                    dataType: "JSON",
+                    data: {
+                        user_oid: userOid
+                    },
+                    success: (res) => {
+                        return resolve(res.data.room_oid)
+                    }
+                })
+            })
+        }
+
+        let headers = () => {
+            return {
+                Authorization: 'Bearer ' + token
+            }
+        }
+
+
+        let run = async () => {
+            let user = getUrlParameter('user')
+            let fromUser = `user_${user}`
+            console.log(fromUser)
+            $('title').html(fromUser)
+            let userName = users[fromUser].username
+            show("Start", userName)
+            token = await login(userName)
+            connectSocket(token)
+            let withUser = `user_${getUrlParameter('connect-with')}`
+            let connectWithUserOid = users[withUser].user_oid
+            let roomOid = await joinRoom(connectWithUserOid);
+            show("Join room", roomOid)
+            roomConnected = roomOid
+            socket.emit('JOIN_ROOM', {
+                room_oid: roomOid
+            })
+        }
+
+
+        let getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+            return false;
+        };
+        run()
     })
 </script>
 </body>

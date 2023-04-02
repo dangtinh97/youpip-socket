@@ -10,3 +10,17 @@ services:
 #      - .:/var/www/html
     ports:
       - "3003:3003"
+    networks:
+      - backend
+  pip_redis:
+    container_name: "pip_redis"
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+
+networks:
+  backend:
+      driver: 'bridge'

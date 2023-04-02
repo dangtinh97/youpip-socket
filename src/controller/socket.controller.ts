@@ -1,6 +1,7 @@
 import socket, {Server,Socket} from 'socket.io'
 import SocketService from "../services/socket.service";
 import jwtConfig from '../config/jwt'
+import ESocket from "../enum/ESocket";
 const jwt = require('jsonwebtoken');
 class SocketController {
     public io:Server
@@ -18,20 +19,11 @@ class SocketController {
 
     private  socketListener(socket:Socket): void
     {
-        let roomId = "dangtinhroom001"
-        socket.join(roomId)
         let service = new SocketService(socket,this.userOid)
         service.connect()
         socket.on("disconnect",()=>service.disconnect())
-        socket.on("PUSH_ROOM",function (data:any){
-            console.log(data)
-
-            console.log(socket.rooms)
-            socket.emit("PING","PING")
-            socket.in(roomId).to(roomId).emit("PUSH_ROOM",{
-                "name":"dangtinh"
-            })
-        })
+        socket.on(ESocket.JOIN_ROOM,(data:any)=>service.joinRoom(data.room_oid ?? ''))
+        socket.on(ESocket.MESSAGE,(data)=>service.message(data.room_oid,data.content))
     }
 
     private middleware(){
@@ -47,7 +39,6 @@ class SocketController {
             }
         })
     }
-
 
 }
 
