@@ -18,14 +18,17 @@ class SocketController {
 
     private  socketListener(socket:Socket): void
     {
-        socket.join("roomA")
+        let roomId = "dangtinhroom001"
+        socket.join(roomId)
         let service = new SocketService(socket,this.userOid)
         service.connect()
         socket.on("disconnect",()=>service.disconnect())
         socket.on("PUSH_ROOM",function (data:any){
             console.log(data)
+
+            console.log(socket.rooms)
             socket.emit("PING","PING")
-            socket.to('roomA').emit("PUSH_ROOM",{
+            socket.in(roomId).to(roomId).emit("PUSH_ROOM",{
                 "name":"dangtinh"
             })
         })

@@ -50,7 +50,6 @@
 
         })
         $("#push").on('click',function (){
-            alert("click")
             socket.emit("PUSH_ROOM",{
                 room:"roomA"
             })
