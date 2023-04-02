@@ -82,7 +82,8 @@ class SocketService {
         if(user.length>0){
             this.socket.to(user[0].socket_id).emit(ESocket.MESSAGE+"_OTHER",{
                 content:content,
-                from_user_oid:this.userOid
+                from_user_oid:this.userOid,
+                room_oid:roomOid
             })
         }
 
