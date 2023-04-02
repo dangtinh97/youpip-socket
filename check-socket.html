@@ -14,7 +14,7 @@
 <script>
     document.addEventListener("DOMContentLoaded",function (){
         var URL = 'http://54.254.11.130:3003';
-        URL = 'http://localhost:3003';
+        // URL = 'http://localhost:3003';
         let socket = io(URL,{
             "auth":{
                 'token':"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vNTQuMjU0LjExLjEzMC9hcGkvbG9naW4iLCJpYXQiOjE2ODA0MDM3NjEsImV4cCI6MTY5NTk1NTc2MSwibmJmIjoxNjgwNDAzNzYxLCJqdGkiOiJBQzJjb1ROZ3dLWWdqbTJTIiwic3ViIjoiNjQxOWU2MTllMGIxMGUwNTNlMDkyNDg0IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.3rwxwOQpIMyPxoi9uvuwy6FZDlGaox6zF47ZnYFw1jc"
@@ -25,7 +25,7 @@
             },
         })
         socket.on("disconnect",()=>{
-            console.log("dsdsds")
+
         })
 
         socket.on("connect",()=>{
@@ -33,14 +33,14 @@
                 console.log("disconnect")
             })
 
-            socket.on("hello",function (){
+            socket.on("PUSH_ROOM",function (){
                 console.log("HELLO")
             })
 
-            socket.on("ping",function (){
+            socket.on("PING",function (){
                 console.log("PING")
             })
-
+            console.log(socket)
 
             $('#id-socket').html(`id : ${socket.id}`)
 

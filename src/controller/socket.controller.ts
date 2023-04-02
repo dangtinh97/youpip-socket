@@ -24,6 +24,7 @@ class SocketController {
         socket.on("disconnect",()=>service.disconnect())
         socket.on("PUSH_ROOM",function (data:any){
             console.log(data)
+            socket.emit("PING","PING")
             socket.to('roomA').emit("PUSH_ROOM",{
                 "name":"dangtinh"
             })
