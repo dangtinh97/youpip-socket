@@ -41,7 +41,6 @@ class SocketService {
     {
         this.socket.join(roomOid)
         let users =await this.roomRepository.getUser(roomOid)
-        console.log(users)
         let user = users['users'].filter((user:any)=>{
             return user._id.toString()!=this.userOid
         })
@@ -69,11 +68,24 @@ class SocketService {
 
     }
 
-    public message(room:string,content:string){
-        this.socket.to(room).emit(ESocket.MESSAGE,{
+    public async message(roomOid:string,content:string){
+        this.socket.to(roomOid).emit(ESocket.MESSAGE,{
             content:content,
             from_user_oid:this.userOid
         })
+
+        let users =await this.roomRepository.getUser(roomOid)
+        let user = users['users'].filter((user:any)=>{
+            return user._id.toString()!=this.userOid && (user.socket_id ?? '').toString().length > 0
+        })
+        if(user.length>0){
+            this.socket.to(user[0].socket_id).emit(ESocket.MESSAGE,{
+                content:content,
+                from_user_oid:this.userOid
+            })
+        }
+
+
     }
 }
 
