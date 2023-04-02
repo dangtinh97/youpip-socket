@@ -4,20 +4,16 @@ import StrHelper from "../helper/str.helper";
 import ESocket from '../enum/ESocket'
 import databaseConfig from '../config/database'
 import {createClient, RedisClientType} from 'redis';
+import RoomRepository from "../repositories/room.repository";
 class SocketService {
 
     private readonly userRepository:UserRepository
+    protected readonly roomRepository:RoomRepository
 
-    // private redisClient:RedisClientType
 
     public constructor(public socket:Socket,public userOid:string) {
         this.userRepository = new UserRepository()
-        // this.redisClient = createClient({
-        //     url: databaseConfig.redis_url
-        // })
-        // this.redisClient.connect().then(()=>{
-        //     console.log("Redis Connected!")
-        // })
+        this.roomRepository = new RoomRepository()
     }
 
     public connect(){
@@ -41,14 +37,31 @@ class SocketService {
         })
     }
 
-    public joinRoom(roomOid:string)
+    public async joinRoom(roomOid:string)
     {
         this.socket.join(roomOid)
-        console.log('room_oid'+roomOid)
+        let users =await this.roomRepository.getUser(roomOid)
+        console.log(users)
+        let user = users['users'].filter((user:any)=>{
+            return user._id.toString()!=this.userOid
+        })
+
+
         this.socket.to(roomOid).emit(ESocket.JOIN_ROOM,{
             user_oid:this.userOid,
-            room_oid:roomOid
+            room_oid:roomOid,
+            otherOnline: (user[0].socket_id ?? '').length > 0
         })
+        this.socket.emit(ESocket.JOIN_ROOM,{
+            user_oid:this.userOid,
+            room_oid:roomOid,
+            otherOnline: (user[0].socket_id ?? '').length > 0
+        })
+    }
+
+    private getUserInRoom(roomOid:string)
+    {
+
     }
 
     public leaveRoom(room:string)

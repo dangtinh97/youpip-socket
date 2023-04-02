@@ -69,10 +69,10 @@
             }
         }
 
-        // let BASE_URL = 'http://localhost'
-        // let URL_API = 'http://youpip.local/api'
-        let BASE_URL = 'http://54.254.11.130'
-        let URL_API = 'http://54.254.11.130/api'
+        let BASE_URL = 'http://localhost'
+        let URL_API = 'http://youpip.local/api'
+        // let BASE_URL = 'http://54.254.11.130'
+        // let URL_API = 'http://54.254.11.130/api'
         let token = ''
         let urlSocket = BASE_URL + ':3003'
         let roomConnected = ''
@@ -101,11 +101,12 @@
             let message = $('#message').val()
 
             if(event===EVENT_MESSAGE){
-                $('#message').val('')
                 message = {
                     room_oid:roomConnected,
                     content:message
                 }
+                saveMsg($('#message').val())
+                $('#message').val('')
             }
 
             socket.emit(event,message)
@@ -128,7 +129,7 @@
 
         let socketListener = () => {
             socket?.on('connect', function () {
-                show('CONNECTED', socket.id)
+                show('Connected', socket.id)
             })
 
             socket?.on("PING", function () {
@@ -136,7 +137,10 @@
             })
 
             socket.on("MESSAGE",function (data){
-                show("MESSAGE",JSON.stringify(data))
+                show("Message",JSON.stringify(data))
+            })
+            socket.on("JOIN_ROOM",function (res){
+                console.log(res)
             })
         }
 
@@ -224,6 +228,24 @@
             return false;
         };
         run()
+
+        let saveMsg = (mess)=>{
+            $.ajax({
+                url :URL_API+'/chats/'+roomConnected,
+                type:"POST",
+                dataType:"JSON",
+                headers: headers(),
+                data:{
+                    message:mess
+                },
+                success:function (response){
+                    show("Send",mess)
+                }
+            })
+        }
+
+
+
     })
 </script>
 </body>
