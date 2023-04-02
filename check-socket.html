@@ -6,6 +6,9 @@
 </head>
 <body>
 <p id="id-socket"></p>
+<button type="button" id="push">
+    PUSH
+</button>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -36,7 +39,14 @@
                 console.log("PING")
             })
 
+
             $('#id-socket').html(`id : ${socket.id}`)
+        })
+
+        $("#push").on('click',function (){
+            socket.emit("PUSH_ROOM",{
+                room:"roomA"
+            })
         })
 
     })
