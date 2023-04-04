@@ -35,7 +35,7 @@ class App{
             let videoId = req.query['video-id']
             console.log(videoId)
             try{
-                let detail = await Youtube.getInfo({url: 'https://www.youtube.com/watch?v='+videoId});
+                let detail = await Youtube.getInfo({url: 'https://www.youtube.com/v/'+videoId});
                 return res.json(detail)
             }catch (e:any){
                 return res.json({})
