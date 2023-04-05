@@ -32,6 +32,8 @@ services:
       - ./nginx/server.key:/etc/nginx/server.key
     networks:
       - backend
+    depends_on:
+      - pip_node
 
 
 
