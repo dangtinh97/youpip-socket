@@ -27,7 +27,7 @@ services:
     working_dir: /var/www/html
 
     volumes:
-      - ./:var/www/html
+      - ./:/var/www/html
       - ./nginx:/etc/nginx/conf.d
       - ./nginx/server.crt:/etc/nginx/server.crt
       - ./nginx/server.key:/etc/nginx/server.key
