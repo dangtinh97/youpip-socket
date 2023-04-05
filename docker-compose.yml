@@ -24,7 +24,10 @@ services:
     image: "nginx:latest"
     ports:
       - "3000:3000"
+    working_dir: /var/www/html
+
     volumes:
+      - ./:var/www/html
       - ./nginx:/etc/nginx/conf.d
       - ./nginx/server.crt:/etc/nginx/server.crt
       - ./nginx/server.key:/etc/nginx/server.key
