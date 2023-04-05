@@ -23,7 +23,7 @@ services:
     container_name: "pip_webserver"
     image: "nginx:latest"
     ports:
-      - "3000:3000"
+      - "3000:443"
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
