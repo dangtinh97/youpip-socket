@@ -19,6 +19,18 @@ services:
       - "6379:6379"
     networks:
       - backend
+  pip_webserver:
+    container_name: "pip_webserver"
+    image: "nginx:latest"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/server.crt:/etc/nginx/server.crt
+      - ./nginx/server.key:/etc/nginx/server.key
+    networks:
+      - backend
+
 
 
 networks:
