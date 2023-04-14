@@ -32,10 +32,12 @@ class App{
     route()
     {
         this.app.get('/',async function (req:Request,res:Response){
-            let videoId = req.query['video-id']
-            console.log(videoId)
+            let url = req.query['url'] ?? ''
+            if(url.length==''){
+                return res.json({})
+            }
             try{
-                let detail = await Youtube.getInfo({url: 'https://www.youtube.com/v/'+videoId});
+                let detail = await Youtube.getInfo({url: url});
                 return res.json(detail)
             }catch (e:any){
                 return res.json({})
