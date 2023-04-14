@@ -7,5 +7,4 @@ RUN npm install
 RUN npm i rimraf
 
 CMD ["npm", "start"]
-RUN echo $(ls -1 /var/www/html)
 EXPOSE 3003
