@@ -44,6 +44,22 @@ class App{
             }
 
         })
+
+        this.app.get('/vtv',(req:Request,res:Response)=>{
+            var fetchUrl = require("fetch").fetchUrl;
+            let pattern = /<script id="__NEXT_DATA__" type="application\/json">(.*?)<\//;
+            fetchUrl(req.query['url'],function (error:any,meta:any,body:any){
+                if(error!==null){
+
+                    return res.json({})
+                }
+                let response = body.toString()
+                let result = response.match(pattern);
+                return res.json({
+                    data:result[0].toString()
+                })
+            })
+        })
     }
 
 }
