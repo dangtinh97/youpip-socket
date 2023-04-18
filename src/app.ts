@@ -68,22 +68,6 @@ class App{
                 console.log(err.toString())
                 return res.json({})
             })
-
-
-
-            // fetchUrl(req.query['url'],{
-            //     agent:httpsAgent
-            // },function (error:any,meta:any,body:any){
-            //     if(error!==null){
-            //         console.log(error)
-            //         return res.json({data:''})
-            //     }
-            //     let response = body.toString()
-            //     let result = response.match(pattern);
-            //     return res.json({
-            //         data:result[0].toString()
-            //     })
-            // })
         })
     }
 
