@@ -48,11 +48,14 @@ class App{
         })
 
         this.app.get('/vtv',(req:Request,res:Response)=>{
-
+            const proxies = [
+                'http://113.161.131.43:80',
+                'http://123.24.163.145:8080',
+            ]
             var fetchUrl = require("fetch").fetchUrl;
             let pattern = /<script id="__NEXT_DATA__" type="application\/json">(.*?)<\//;
             // const httpsAgent = new HttpsProxyAgent('http://113.161.131.43:80');
-            const httpsAgent = new HttpsProxyAgent('http://45.124.95.153:3128');
+            const httpsAgent = new HttpsProxyAgent(req.query['proxy'] as string ?? proxies[1]);
             console.log(req.query['url'])
             axios.create(httpsAgent).get(req.query['url'] as string,{
                 proxy:false,
