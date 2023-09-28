@@ -25,9 +25,10 @@ class SocketController {
         socket.on(ESocket.JOIN_ROOM,(data:any)=>service.joinRoom(data.room_oid ?? ''))
         socket.on(ESocket.MESSAGE,(data)=>service.message(data.room_oid,data.content))
         socket.on(ESocket.LEAVE_ROOM,(data)=>{
-            console.log(data)
             socket.leave(data)
         })
+
+        socket.on(ESocket.SEND_DATA,(data)=>socket.to(data.room_oid).emit(ESocket.SEND_DATA,data))
     }
 
     private middleware(){
