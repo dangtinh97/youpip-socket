@@ -23,6 +23,7 @@ class SocketController {
         service.connect()
         socket.on("disconnect",()=>service.disconnect())
         socket.on(ESocket.JOIN_ROOM,(data:any)=>service.joinRoom(data.room_oid ?? ''))
+        socket.on(ESocket.JOIN_CALL,(data:any)=>socket.join(data.room_oid ?? ''))
         socket.on(ESocket.MESSAGE,(data)=>service.message(data.room_oid,data.content))
         socket.on(ESocket.LEAVE_ROOM,(data)=>{
             socket.leave(data)
